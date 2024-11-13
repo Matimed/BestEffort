@@ -3,6 +3,7 @@ package aed;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,15 @@ public class HeapTests {
         assertEquals(maxHeap.desapilarMax(), 3);
         assertEquals(maxHeap.desapilarMax(), 1);
         assertTrue(maxHeap.vacia());
+
+        //que pasa con valores duplicados
+        maxHeap.apilar(7);
+        maxHeap.apilar(7);
+        assertEquals(maxHeap.consultarMax(),7);
+        assertEquals(maxHeap.desapilarMax(), 7);
+        assertEquals(maxHeap.desapilarMax(), 7);
+        assertTrue(maxHeap.vacia());
+
     }
 
     @Test
@@ -42,6 +52,14 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 3);
         assertEquals(minHeap.desapilarMax(), 5);
         assertEquals(minHeap.desapilarMax(), 8);
+        assertTrue(minHeap.vacia());
+
+        //que pasa con valores duplicados
+        minHeap.apilar(3);
+        minHeap.apilar(3);
+        assertEquals(minHeap.consultarMax(),3);
+        assertEquals(minHeap.desapilarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 3);
         assertTrue(minHeap.vacia());
     }
     
@@ -70,7 +88,31 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 5);
         assertTrue(minHeap.vacia());
         assertTrue(maxHeap.vacia());
+        
+        //que pasa con valores duplicados
+        minHeap.apilar(5);
+        minHeap.apilar(5);
+        assertEquals(maxHeap.consultarMax(),5);
+        assertEquals(minHeap.desapilarMax(), 5);
+        assertEquals(minHeap.desapilarMax(), 5);
+        assertTrue(maxHeap.vacia());
+        assertTrue(minHeap.vacia());
+
     }
+    
+
+    @Test
+    public void max_heap_single_element(){
+        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder());
+        maxHeap.apilar(10);
+
+        assertEquals(maxHeap.consultarMax(),10);
+        assertEquals(maxHeap.desapilarMax(),10);
+        assertTrue(maxHeap.vacia());
+
+    }
+
+    //para ver si funcionan con más de una condición, me creo una clase nueva, para podr comparr los nodos
     
 
 }
