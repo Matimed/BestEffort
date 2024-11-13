@@ -44,11 +44,12 @@ public class Heap<T> implements ColaPrioridad<T> {
         T nodo;
         int indxHijoMayor;
         T nodoHijoMayor;
+
+        // Itero mientras tenga un nodo hijo menor que si mismo
         while  (this.existe(this.getIndxHijoIzq(i)) && this.comparador.compare(this.getNodo(i), this.getNodoHijoIzq(i)) < 0 ||
                 this.existe(this.getIndxHijoDer(i)) && this.comparador.compare(this.getNodo(i), this.getNodoHijoDer(i)) < 0) {
                 
-            if (!this.existe(this.getIndxHijoIzq(i))) indxHijoMayor = this.getIndxHijoIzq(i);
-            else if (!this.existe(this.getIndxHijoDer(i))) indxHijoMayor = this.getIndxHijoDer(i);
+            if (!this.existe(this.getIndxHijoDer(i))) indxHijoMayor = this.getIndxHijoIzq(i);
             else {
                 if (this.comparador.compare(this.getNodoHijoIzq(i) , this.getNodoHijoDer(i)) > 0) indxHijoMayor = getIndxHijoIzq(i);
                 else indxHijoMayor = getIndxHijoDer(i); 
@@ -78,8 +79,11 @@ public class Heap<T> implements ColaPrioridad<T> {
 
     public T desapilarMax(){
         T res =  this.elementos.get(0);
-        this.elementos.set(0, this.popLast());
-        this.siftDown(0);
+        T ultimo = this.popLast();
+        if(!this.vacia()){
+            this.elementos.set(0, ultimo);
+            this.siftDown(0);
+        }
         return res;
     }
 
