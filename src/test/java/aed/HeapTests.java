@@ -6,6 +6,9 @@ import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
 
+import aed.ColaPrioridad.Heap;
+import aed.ColaPrioridad.HeapEnlazado;
+
 public class HeapTests {
 
     @Test
