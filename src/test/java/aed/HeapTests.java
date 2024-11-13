@@ -50,6 +50,14 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 5);
         assertEquals(minHeap.desapilarMax(), 8);
         assertTrue(minHeap.vacia());
+
+        //que pasa con valores duplicados
+        minHeap.apilar(3);
+        minHeap.apilar(3);
+        assertEquals(minHeap.consultarMax(),3);
+        assertEquals(minHeap.desapilarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 3);
+        assertTrue(minHeap.vacia());
     }
 
     @Test
@@ -112,6 +120,17 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 5);
         assertTrue(minHeap.vacia());
         assertTrue(maxHeap.vacia());
+    }
+    
+    @Test
+    public void max_heap_single_element(){
+        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder());
+        maxHeap.apilar(10);
+
+        assertEquals(maxHeap.consultarMax(),10);
+        assertEquals(maxHeap.desapilarMax(),10);
+        assertTrue(maxHeap.vacia());
+
     }
 
 }
