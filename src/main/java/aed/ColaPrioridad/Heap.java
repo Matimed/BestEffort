@@ -21,6 +21,15 @@ public class Heap<T> extends AbstractHeap<T> {
         this.siftUp(this.elementos.size()-1);
     }
 
+    public ArrayList<T> sort(){
+        ArrayList<T> ordenado = new ArrayList<T>();
+        while (!this.vacia()){
+            ordenado.add(this.desapilarMax());
+        }
+        this.elementos = ordenado;
+        return ordenado;
+    }
+
     @Override
     protected T getValor(int nodo) { return this.elementos.get(nodo); }
 
