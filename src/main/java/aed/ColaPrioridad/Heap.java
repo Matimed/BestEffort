@@ -6,8 +6,14 @@ public class Heap<T> extends AbstractHeap<T> {
     ArrayList<T> elementos;
 
     public Heap(Comparator<T> comparador){
+        super(comparador);
         this.elementos = new ArrayList<T>();
-        this.comparador = comparador;
+    }
+
+    public Heap(Comparator<T> comparador, T[] elems){
+        this(comparador); // Creo el Heap vacio
+        for (T e: elems){ this.elementos.add(e);} //Agrego al arrayList O(n)
+        this.heapify();
     }
 
     public void apilar(T elem) {

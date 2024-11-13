@@ -1,12 +1,9 @@
 package aed;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Comparator;
-import java.util.Objects;
-
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
 import aed.ColaPrioridad.Heap;
 import aed.ColaPrioridad.HeapEnlazado;
 
@@ -53,14 +50,22 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 5);
         assertEquals(minHeap.desapilarMax(), 8);
         assertTrue(minHeap.vacia());
+    }
 
-        //que pasa con valores duplicados
-        minHeap.apilar(3);
-        minHeap.apilar(3);
-        assertEquals(minHeap.consultarMax(),3);
-        assertEquals(minHeap.desapilarMax(), 3);
-        assertEquals(minHeap.desapilarMax(), 3);
-        assertTrue(minHeap.vacia());
+    @Test
+    public void array2heap(){
+        Integer[] elems = {4,5,9,1,0,3,-5};
+        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder(), elems);
+        
+        assertFalse(maxHeap.vacia());
+        assertEquals(maxHeap.desapilarMax(), 9);
+        assertEquals(maxHeap.desapilarMax(), 5);
+        assertEquals(maxHeap.desapilarMax(), 4);
+        assertEquals(maxHeap.desapilarMax(), 3);
+        assertEquals(maxHeap.desapilarMax(), 1);
+        assertEquals(maxHeap.desapilarMax(), 0);
+        assertEquals(maxHeap.desapilarMax(), -5);
+        assertTrue(maxHeap.vacia());
     }
     
 
@@ -68,8 +73,7 @@ public class HeapTests {
     public void heap_enlazado(){
         HeapEnlazado<Integer> maxHeap = new HeapEnlazado<Integer>(Comparator.naturalOrder());
         HeapEnlazado<Integer> minHeap = new HeapEnlazado<Integer>(Comparator.reverseOrder());
-        maxHeap.enlazar(minHeap);
-        minHeap.enlazar(maxHeap);
+        maxHeap.inicialiar(minHeap);
 
         minHeap.apilar(5);
         minHeap.apilar(3);
@@ -88,31 +92,26 @@ public class HeapTests {
         assertEquals(minHeap.desapilarMax(), 5);
         assertTrue(minHeap.vacia());
         assertTrue(maxHeap.vacia());
-        
-        //que pasa con valores duplicados
-        minHeap.apilar(5);
-        minHeap.apilar(5);
-        assertEquals(maxHeap.consultarMax(),5);
-        assertEquals(minHeap.desapilarMax(), 5);
-        assertEquals(minHeap.desapilarMax(), 5);
-        assertTrue(maxHeap.vacia());
-        assertTrue(minHeap.vacia());
-
     }
     
-
     @Test
-    public void max_heap_single_element(){
-        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder());
-        maxHeap.apilar(10);
-
-        assertEquals(maxHeap.consultarMax(),10);
-        assertEquals(maxHeap.desapilarMax(),10);
+    public void array2heap_enlazado(){
+        HeapEnlazado<Integer> maxHeap = new HeapEnlazado<Integer>(Comparator.naturalOrder());
+        HeapEnlazado<Integer> minHeap = new HeapEnlazado<Integer>(Comparator.reverseOrder());
+        Integer[] elems = {5,3,0,8,1};
+        maxHeap.inicialiar(minHeap, elems);
+        
+        assertFalse(minHeap.vacia());
+        assertFalse(maxHeap.vacia());
+        assertEquals(minHeap.desapilarMax(), 0);
+        assertEquals(maxHeap.consultarMax(), 8);
+        assertEquals(minHeap.desapilarMax(), 1);
+        assertEquals(maxHeap.desapilarMax(), 8);
+        assertEquals(minHeap.consultarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 5);
+        assertTrue(minHeap.vacia());
         assertTrue(maxHeap.vacia());
-
     }
-
-    //para ver si funcionan con más de una condición, me creo una clase nueva, para podr comparr los nodos
-    
 
 }

@@ -2,13 +2,13 @@ package aed.ColaPrioridad;
 
 interface ColaPrioridad<T> {
     /**
-     * Devuelve verdadero si la cola esta vacia
+     * Devuelve verdadero si no contiene elementos. 
      * 
      */
     public boolean vacia();
 
     /**
-     * Agrega un elemento a la la secuencia.
+     * Agrega un elemento y lo ordena.
      * 
      */
     public void apilar(T elem);
