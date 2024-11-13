@@ -14,6 +14,7 @@ public class HeapTests {
 
         maxHeap.apilar(5);
         maxHeap.apilar(3);
+        assertEquals(maxHeap.consultarMax(),5);
         maxHeap.apilar(8);
         maxHeap.apilar(1);
 
@@ -41,4 +42,32 @@ public class HeapTests {
         assertTrue(minHeap.vacia());
     }
     
+
+    @Test
+    public void heap_enlazado(){
+        HeapEnlazado<Integer> maxHeap = new HeapEnlazado<Integer>(Comparator.naturalOrder());
+        HeapEnlazado<Integer> minHeap = new HeapEnlazado<Integer>(Comparator.reverseOrder());
+        maxHeap.enlazar(minHeap);
+        minHeap.enlazar(maxHeap);
+
+        minHeap.apilar(5);
+        minHeap.apilar(3);
+        maxHeap.apilar(0);
+        minHeap.apilar(8);
+        minHeap.apilar(1);
+        
+        assertFalse(minHeap.vacia());
+        assertFalse(maxHeap.vacia());
+        assertEquals(minHeap.desapilarMax(), 0);
+        assertEquals(maxHeap.consultarMax(), 8);
+        assertEquals(minHeap.desapilarMax(), 1);
+        assertEquals(maxHeap.desapilarMax(), 8);
+        assertEquals(minHeap.consultarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 3);
+        assertEquals(minHeap.desapilarMax(), 5);
+        assertTrue(minHeap.vacia());
+        assertTrue(maxHeap.vacia());
+    }
+    
+
 }
