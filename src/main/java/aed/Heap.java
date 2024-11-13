@@ -6,48 +6,52 @@ public class Heap<T> implements ColaPrioridad<T> {
     ArrayList<T> elementos;
     Comparator<T> comparador;
 
-    private int getIndxIzq(int i) { return 2 * i + 1; }
+    protected int getIndxIzq(int i) { return 2 * i + 1; }
     
-    private int getIndxDer(int i) { return 2 * i + 2; }
+    protected int getIndxDer(int i) { return 2 * i + 2; }
     
-    private int getIndxPadre(int i) { return (i - 1) / 2; }
+    protected int getIndxPadre(int i) { return (i - 1) / 2; }
 
-    private int getLastIndx() { return this.elementos.size() - 1; }
+    protected int getLastIndx() { return this.elementos.size() - 1; }
     
-    private T getValor(int nodo) { return this.elementos.get(nodo); }
+    protected boolean existe (int nodo) { return nodo < this.elementos.size(); }
 
-    private T getValorIzq(int nodo) { return this.elementos.get(this.getIndxIzq(nodo)); }
+    protected T getValor(int nodo) { return this.elementos.get(nodo); }
 
-    private T getValorDer(int nodo) { return this.elementos.get(this.getIndxDer(nodo)); }
+    protected T getValorIzq(int nodo) { return this.getValor(this.getIndxIzq(nodo)); }
 
-    private T getValorPadre(int nodo) { return this.elementos.get(this.getIndxPadre(nodo)); }
+    protected T getValorDer(int nodo) { return this.getValor(this.getIndxDer(nodo)); }
 
-    private boolean existe (int nodo) { return nodo < this.elementos.size(); }
+    protected T getValorPadre(int nodo) { return this.getValor(this.getIndxPadre(nodo)); }
 
-    private void swap(int indxA, int indxB) {
+    public boolean vacia() { return this.elementos.isEmpty(); }
+
+    protected void swap(int indxA, int indxB) {
         if (indxA == indxB) return;
         
         T nodoA = this.getValor(indxA);
         T nodoB = this.getValor(indxB);
+
         this.elementos.set(indxA, nodoB);
         this.elementos.set(indxB, nodoA);   
     }
     
 
-    private T popLast() { 
+    protected T popLast() { 
         T res = this.elementos.get(this.getLastIndx());
         this.elementos.remove(this.getLastIndx());
         return res;
     }
 
-    private void siftUp(int i){
+    protected int siftUp(int i){
         while (i != 0 && this.comparador.compare(this.getValor(i), this.getValorPadre(i)) > 0){
             this.swap(i, this.getIndxPadre(i));
             i = this.getIndxPadre(i);
         }
+        return i;
     }
 
-    private void siftDown(int i){
+    protected int siftDown(int i){
         int indxHijoMayor;
 
         // Itero mientras tenga un nodo hijo menor que si mismo
@@ -63,6 +67,7 @@ public class Heap<T> implements ColaPrioridad<T> {
             this.swap(i, indxHijoMayor);
             i = indxHijoMayor;
         }
+        return i;
     }
 
     public Heap(Comparator<T> comparador){
@@ -76,23 +81,14 @@ public class Heap<T> implements ColaPrioridad<T> {
     }
 
     public T consultarMax() {
-        return this.elementos.get(0);
+        return this.getValor(0);
     }
 
     public T desapilarMax(){
-        T res =  this.elementos.get(0);
-        T ultimo = this.popLast();
-        if(!this.vacia()){
-            this.elementos.set(0, ultimo);
-            this.siftDown(0);
-        }
+        this.swap(0,  this.getLastIndx());
+        T res = this.popLast();
+        this.siftDown(0);
+        
         return res;
     }
-
-    public boolean vacia(){
-        return this.elementos.isEmpty();
-    }
-
 }
-
-
