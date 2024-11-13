@@ -11,6 +11,25 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         this.elementos = new ArrayList<Nodo>();
     }
 
+    /**
+     * Enlaza el Heap con otro del mismo tipo.
+     * 
+     */
+    public void inicialiar(HeapEnlazado<T> espejo){
+        this.enlazar(espejo);
+        espejo.enlazar(this);
+    }
+
+
+    /**
+     * Enlaza, completa y ordena tanto el heap como su reflejo.
+     * 
+     */
+    public void inicialiar(HeapEnlazado<T> espejo, T[] elems){
+        this.inicialiar(espejo);
+        if (elems != null){ this.array2heap(elems);}
+    }
+
     @Override
     public void apilar(T elem) {
         Nodo nodo = new Nodo(elem);
@@ -45,31 +64,21 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         return nodo.valor;
     }
 
-    public void inicialiar(HeapEnlazado<T> espejo){
-        this.enlazar(espejo);
-        espejo.enlazar(this);
-    }
+    private void enlazar(HeapEnlazado<T> espejo){ this.espejo = espejo; }
 
-    public void inicialiar(HeapEnlazado<T> espejo, T[] elems){
-        this.inicialiar(espejo);
-        if (elems != null){ this.array2heap(elems);}
-    }
-
-    public void enlazar(HeapEnlazado<T> espejo){ this.espejo = espejo; }
-
-    public void actualizarReflejo(int indxNodo, int nuevaRef){
+    private void actualizarReflejo(int indxNodo, int nuevaRef){
         if(!existe(indxNodo)) return;
         Nodo nodo = this.getNodo(indxNodo);
         nodo.posicionEspejo = nuevaRef;
     }
 
-    public void eliminarReflejo(int indxNodo){
+    private void eliminarReflejo(int indxNodo){
         this.swap(indxNodo, this.getLastIndx());
         this.elementos.remove(this.getLastIndx());
         this.siftDown(indxNodo);
     }
 
-    public int apilarReflejo(T valor){
+    private int apilarReflejo(T valor){
         Nodo nodo = new Nodo(valor);
         this.elementos.add(nodo);
         // La posicion del reflejo siempre es el ultimo elemento primero y luego lo acomodo
@@ -77,7 +86,7 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         return this.siftUp(this.getLastIndx());
     }
 
-    public void addElemens(T[] elems){
+    private void addElemens(T[] elems){
         //Notar que este metodo no actualiza el reflejo automaticamente
         for (int i = 0; i < elems.length; i++){
             Nodo n = new Nodo(elems[i], i);
