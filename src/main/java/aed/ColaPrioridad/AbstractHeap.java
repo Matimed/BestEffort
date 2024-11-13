@@ -23,6 +23,8 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
         return res;
     }
     
+    protected AbstractHeap(Comparator<T> comparador){ this.comparador = comparador; }
+
     protected boolean existe(int nodo) { return nodo < this.getSize() && nodo >= 0; }
 
     protected int getLastIndx() { return this.getSize() - 1; }
@@ -50,6 +52,14 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
             indxMayor = this.getIndxMayor(i);
         }
         return i;
+    }
+
+    protected void heapify(){
+        int i = this.getSize();
+        while (i != 0){ // Downheap de abajo hacia arriba O(n)
+            i --;
+            this.siftDown(i);
+        }
     }
 
     protected int getIndxMayor(int nodo){

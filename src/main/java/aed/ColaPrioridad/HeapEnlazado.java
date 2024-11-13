@@ -7,8 +7,8 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
     HeapEnlazado<T> espejo; // Almacena la referencia al heap espejado
 
     public HeapEnlazado(Comparator<T> comparador){
+        super(comparador);
         this.elementos = new ArrayList<Nodo>();
-        this.comparador = comparador;
     }
 
     @Override
@@ -45,9 +45,17 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         return nodo.valor;
     }
 
-    public void enlazar(HeapEnlazado<T> espejo){
-        this.espejo = espejo;
+    public void inicialiar(HeapEnlazado<T> espejo){
+        this.enlazar(espejo);
+        espejo.enlazar(this);
     }
+
+    public void inicialiar(HeapEnlazado<T> espejo, T[] elems){
+        this.inicialiar(espejo);
+        if (elems != null){ this.array2heap(elems);}
+    }
+
+    public void enlazar(HeapEnlazado<T> espejo){ this.espejo = espejo; }
 
     public void actualizarReflejo(int indxNodo, int nuevaRef){
         if(!existe(indxNodo)) return;
@@ -69,6 +77,23 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         return this.siftUp(this.getLastIndx());
     }
 
+    public void addElemens(T[] elems){
+        //Notar que este metodo no actualiza el reflejo automaticamente
+        for (int i = 0; i < elems.length; i++){
+            Nodo n = new Nodo(elems[i], i);
+            this.elementos.add(n);
+        }
+    }
+
+    private void array2heap(T[] elems){
+        if (this.getSize() != 0) this.elementos.clear();
+        this.addElemens(elems);
+        espejo.addElemens(elems);
+        this.heapify();
+        espejo.heapify();
+    }
+
+
     private Nodo getNodo(int nodo) { return this.elementos.get(nodo); }
 
     private void setNodo(int indx, Nodo nodo){
@@ -80,8 +105,11 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         public int posicionEspejo;
         public T valor;
 
-        public Nodo (T valor){
-            this.valor = valor;
+        public Nodo (T valor){ this.valor = valor; }
+
+        public Nodo (T valor, int pos){
+            this(valor);
+            this.posicionEspejo = pos;
         }
     } 
 }
