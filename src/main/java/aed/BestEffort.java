@@ -1,6 +1,7 @@
 package aed;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class BestEffort {
     private ArrayList<Integer> ciudades;
@@ -13,6 +14,18 @@ public class BestEffort {
         // Implementar
     }
 
+    private Comparator <Traslado> comparadorMasRedituable =(t1, t2) ->{
+        if (t1.gananciaNeta != t2.gananciaNeta){
+            return Integer.compare (t2.gananciaNeta,t1.gananciaNeta);
+        }else{
+            return Integer.compare(t1.id,t2.id);
+        }
+    };
+
+    private Comparator<Traslado> comparadorMasAntiguo = (t1, t2) -> {
+        return Integer.compare(t2.timestamp, t1.timestamp); 
+    };
+    
     public void registrarTraslados(Traslado[] traslados){
         // Implementar
     }
