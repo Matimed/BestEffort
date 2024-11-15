@@ -3,7 +3,11 @@ package aed;
 import java.util.ArrayList;
 
 public class BestEffort {
-    //Completar atributos privados
+    private ArrayList<Integer> ciudades;
+    private ArrayList<Integer> ciudadesMayorGanancia;
+    private ArrayList<Integer> ciudadesMayorPerdida;
+    private Integer gananciasTotales;
+    private Integer trasladosTotales;
 
     public BestEffort(int cantCiudades, Traslado[] traslados){
         // Implementar
@@ -29,18 +33,22 @@ public class BestEffort {
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia(){
-        // Implementar
-        return null;
+        return ciudadesMayorGanancia; //dado que esta instrucción solo devuelve un arraylist, es O(1)
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida(){
-        // Implementar
-        return null;
+        return ciudadesMayorPerdida; //dado que esta instrucción solo devuelve un arraylist, es O(1)
     }
 
     public int gananciaPromedioPorTraslado(){
-        // Implementar
-        return 0;
-    }
-    
+        if (trasladosTotales==0)
+        {
+            return 0;
+        }
+        else
+        {
+            return (int) Math.floor(gananciasTotales/trasladosTotales);//dado que esta instrucción solo obtiene la parte entera de una división de enteros, es O(1)
+        }
+        //notar que, como cada traslado involucra una ganancia neta >= 1, la ganancia promedio siempre será al menos 1 si se despachó al menos un traslado
+    }   
 }
