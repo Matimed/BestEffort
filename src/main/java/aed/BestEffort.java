@@ -3,6 +3,8 @@ package aed;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import aed.ColaPrioridad.HeapEnlazado;
+
 public class BestEffort {
     private ArrayList<Integer> ciudades;
     private ArrayList<Integer> ciudadesMayorGanancia;
@@ -27,7 +29,16 @@ public class BestEffort {
     };
     
     public void registrarTraslados(Traslado[] traslados){
-        // Implementar
+        HeapEnlazado<Traslado> heapRedituable = new HeapEnlazado<>(comparadorMasRedituable);
+        HeapEnlazado<Traslado> heapAntiguo = new HeapEnlazado<>(comparadorMasAntiguo);
+
+        heapRedituable.inicialiar(heapAntiguo);
+        
+        for (int i = 0; i < traslados.length; i++) {
+            Traslado traslado = traslados[i];
+            heapRedituable.apilar(traslado);
+        }
+
     }
 
     public int[] despacharMasRedituables(int n){
