@@ -13,19 +13,28 @@ public class BestEffort {
     private Integer trasladosTotales;
 
     public BestEffort(int cantCiudades, Traslado[] traslados){
-        // Implementar
+        //vamos a decir que cantCiudades == C, y traslados == T, ya que esta función establece las ciudades y las estructuras de los traslados del sistema
+        ArrayList<Integer> citys = new ArrayList<Integer>();
+        Integer i = 0;
+        for (i=0; i<cantCiudades; i++) //O(C)
+        {
+            citys.add(i); //O(1)
+        }
+        ciudades=citys; //O(1)
+        ciudadesMayorGanancia=citys; //O(1)
+        ciudadesMayorPerdida=citys; //O(1)
     }
 
     private Comparator<Traslado> comparadorMasRedituable =(t1, t2) ->{
         if (t1.gananciaNeta != t2.gananciaNeta){
-            return Integer.compare (t2.gananciaNeta,t1.gananciaNeta);
+            return Integer.compare (t2.gananciaNeta,t1.gananciaNeta); //O(1)
         }else{
-            return Integer.compare(t1.id,t2.id);
+            return Integer.compare(t1.id,t2.id); //O(1)
         }
     };
 
     private Comparator<Traslado> comparadorMasAntiguo = (t1, t2) -> {
-        return Integer.compare(t2.timestamp, t1.timestamp); 
+        return Integer.compare(t2.timestamp, t1.timestamp); //O(1)
     };
     
     public void registrarTraslados(Traslado[] traslados){
