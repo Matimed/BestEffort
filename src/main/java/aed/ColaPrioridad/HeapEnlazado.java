@@ -42,7 +42,7 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
     protected T getValor(int i) { return this.getNodo(i).valor; }
 
     @Override
-    protected int getSize() { return this.elementos.size(); }
+    public int getSize() { return this.elementos.size(); }
     
     @Override
     protected void swap(int indxA, int indxB) {

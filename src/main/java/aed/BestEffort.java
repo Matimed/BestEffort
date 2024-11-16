@@ -3,6 +3,7 @@ package aed;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+import aed.ColaPrioridad.Heap;
 import aed.ColaPrioridad.HeapEnlazado;
 
 public class BestEffort {
@@ -11,6 +12,7 @@ public class BestEffort {
     private ArrayList<Integer> ciudadesMayorPerdida;
     private Integer gananciasTotales;
     private Integer trasladosTotales;
+
 
     public BestEffort(int cantCiudades, Traslado[] traslados){
         //vamos a decir que cantCiudades == C, y traslados == T, ya que esta función establece las ciudades y las estructuras de los traslados del sistema
@@ -37,9 +39,10 @@ public class BestEffort {
         return Integer.compare(t2.timestamp, t1.timestamp); //O(1)
     };
     
+    private HeapEnlazado<Traslado> heapRedituable = new HeapEnlazado<>(comparadorMasRedituable);
+    private HeapEnlazado<Traslado> heapAntiguo = new HeapEnlazado<>(comparadorMasAntiguo);
+
     public void registrarTraslados(Traslado[] traslados){
-        HeapEnlazado<Traslado> heapRedituable = new HeapEnlazado<>(comparadorMasRedituable);
-        HeapEnlazado<Traslado> heapAntiguo = new HeapEnlazado<>(comparadorMasAntiguo);
 
         heapRedituable.inicialiar(heapAntiguo);
         
@@ -51,13 +54,48 @@ public class BestEffort {
     }
 
     public int[] despacharMasRedituables(int n){
-        // Implementar
-        return null;
+        int [] despachados = new int[n];
+        int index = 0;
+
+        while(n > 0 && heapRedituable.getSize()>0){
+            Traslado traslado = heapRedituable.desapilarMax();
+            despachados[index ++] = traslado.id;
+
+            procesarDespacho(traslado);
+            n--;
+        }
+        return despachados;
     }
 
     public int[] despacharMasAntiguos(int n){
-        // Implementar
-        return null;
+        int [] despachados = new int[n];
+        int index = 0;
+
+        while(n > 0 && heapAntiguo.getSize()>0){
+            Traslado traslado = heapAntiguo.desapilarMax();
+            despachados[index ++] = traslado.id;
+
+            procesarDespacho(traslado);
+            n--;
+        }
+        return despachados;
+    }
+
+    private Comparator<Ciudades> comparadorSuperavit = (t1, t2) -> {
+        return Integer.compare(t2.superavit, t1.superavit); 
+    };
+
+    private Heap<Ciudades> heapSuperavit = new Heap<>(comparadorSuperavit); 
+
+    private void procesarDespacho(Traslado traslado){
+
+        actualizarCiudad(traslado.origen, traslado.gananciaNeta);
+
+        actualizarCiudad(traslado.destino, -traslado.gananciaNeta);
+    }
+
+    private void actualizarCiudad(int idCiudad, int gananciaNeta){
+        
     }
 
     public int ciudadConMayorSuperavit(){
