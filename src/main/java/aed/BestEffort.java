@@ -6,7 +6,7 @@ import java.util.Comparator;
 import aed.ColaPrioridad.HeapEnlazado;
 
 public class BestEffort {
-    private ArrayList<Integer> ciudades;
+    private ArrayList<Integer> ciudades; //no sé si esto es array de integers. necesita un puntero al nodo de cada ciudad, eso sí
     private ArrayList<Integer> ciudadesMayorGanancia;
     private ArrayList<Integer> ciudadesMayorPerdida;
     private Integer gananciasTotales;
@@ -16,7 +16,7 @@ public class BestEffort {
         // Implementar
     }
 
-    private Comparator <Traslado> comparadorMasRedituable =(t1, t2) ->{
+    private Comparator<Traslado> comparadorMasRedituable =(t1, t2) ->{
         if (t1.gananciaNeta != t2.gananciaNeta){
             return Integer.compare (t2.gananciaNeta,t1.gananciaNeta);
         }else{
