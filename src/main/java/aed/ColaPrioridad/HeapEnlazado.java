@@ -1,21 +1,17 @@
 package aed.ColaPrioridad;
-import java.util.ArrayList;
 import java.util.Comparator;
 
 public class HeapEnlazado<T> extends AbstractHeap<T>{
-    ArrayList<NodoEnlazado> elementos;
     HeapEnlazado<T> espejo; // Almacena la referencia al heap espejado
 
     public HeapEnlazado(Comparator<T> comparador){
         super(comparador);
-        this.elementos = new ArrayList<NodoEnlazado>();
     }
 
     @Override
     public String toString() {
         return this.elementos.toString();
     }
-
 
     /**
      * Enlaza el Heap con otro del mismo tipo.
@@ -43,38 +39,31 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         nodo.posicionReflejo = this.espejo.apilarReflejo(elem);
         this.siftUp(this.getLastIndx());
         return nodo;
-    }
-
-    @Override
-    protected T getValor(int i) { return this.getNodo(i).valor; }
-
-    @Override
-    public int getSize() { return this.elementos.size(); }
-    
+    }    
     
     @Override
     protected T popLast() { 
-        NodoEnlazado nodo = this.getNodo(this.getLastIndx());
+        NodoEnlazado nodo = (NodoEnlazado)this.getNodo(this.getLastIndx());
         this.elementos.remove(nodo.posicion);
-        this.espejo.eliminarReflejo(nodo.posicionReflejo);
+        this.espejo.eliminarReflejo(nodo);
         nodo.posicion = -1;
         return nodo.valor;
     }
 
     private void enlazar(HeapEnlazado<T> espejo){ this.espejo = espejo; }
 
-    private void actualizarReflejo(int indxNodo, int nuevaRef){
-        if(!existe(indxNodo)) return;
-        NodoEnlazado nodo = this.getNodo(indxNodo);
-        nodo.posicionReflejo = nuevaRef;
+    private void actualizarReflejo(NodoEnlazado reflejo){
+        if (!existe(reflejo.posicionReflejo)) return;
+        NodoEnlazado nodo = (NodoEnlazado)this.getNodo(reflejo.posicionReflejo);
+        nodo.posicionReflejo = reflejo.posicion;
     }
 
-    private void eliminarReflejo(int indxNodo){
-        NodoEnlazado reflejo = this.getNodo(indxNodo);
-        this.swap(reflejo.posicion, this.getLastIndx());
+    private void eliminarReflejo(NodoEnlazado reflejo){
+        Nodo nodo = this.getNodo(reflejo.posicionReflejo);
+        this.swap(nodo.posicion, this.getLastIndx());
         this.elementos.remove(this.getLastIndx());
-        reflejo.posicion = -1;
-        this.siftDown(indxNodo);
+        nodo.posicion = -1;
+        this.siftDown(reflejo.posicionReflejo);
     }
 
     private int apilarReflejo(T valor){
@@ -101,15 +90,12 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         espejo.heapify();
     }
 
-
-    protected NodoEnlazado getNodo(int nodo) { return this.elementos.get(nodo); }
-
     @Override
     protected void cambiarPosicion(Nodo nodo, int index){
-        NodoEnlazado nodoE = (NodoEnlazado) nodo;
-        this.elementos.set(index, nodoE);
-        nodo.posicion = index;
-        this.espejo.actualizarReflejo(nodoE.posicionReflejo, index);
+        NodoEnlazado nodoEnlazado = (NodoEnlazado) nodo;
+        this.elementos.set(index, nodoEnlazado);
+        nodoEnlazado.posicion = index;
+        this.espejo.actualizarReflejo(nodoEnlazado);
     }
 
     protected class NodoEnlazado extends Nodo {

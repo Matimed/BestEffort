@@ -3,12 +3,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Heap<T> extends AbstractHeap<T> {
-    ArrayList<Nodo> elementos;
 
-    public Heap(Comparator<T> comparador){
-        super(comparador);
-        this.elementos = new ArrayList<Nodo>();
-    }
+    public Heap(Comparator<T> comparador){ super(comparador); }
 
     public ArrayList<Nodo> inicialiar(T[] elems){
         ArrayList<Nodo> res = new ArrayList<Nodo>();
@@ -30,22 +26,7 @@ public class Heap<T> extends AbstractHeap<T> {
         return nodo;
     }
 
-    // public ArrayList<T> sort(){
-    //     ArrayList<T> ordenado = new ArrayList<T>();
-    //     while (!this.vacia()){
-    //         ordenado.add(this.desapilarMax());
-    //     }
-    //     this.elementos = ordenado;
-    //     return ordenado;
-    // }
-
     public Nodo getNodo(int indx) {return this.elementos.get(indx); }
-
-    @Override
-    protected T getValor(int nodo) { return this.getNodo(nodo).valor; }
-
-    @Override
-    protected int getSize() { return this.elementos.size(); }
 
     @Override
     protected void swap(int indxA, int indxB) {
@@ -72,7 +53,6 @@ public class Heap<T> extends AbstractHeap<T> {
         if (this.compare(nodo, padre) > 0) this.siftUp(nodo.posicion);
         else this.siftDown(nodo.posicion);
     }
-
 
     @Override
     protected void cambiarPosicion(Nodo nodo, int indx){

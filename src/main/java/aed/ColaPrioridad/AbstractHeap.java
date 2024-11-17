@@ -1,23 +1,21 @@
 package aed.ColaPrioridad;
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public abstract class AbstractHeap<T> {
     Comparator<T> comparador;
+    ArrayList<Nodo> elementos;
 
     public abstract Nodo apilar(T valor);
-
-    protected abstract Nodo getNodo(int index);
-
+    
     protected abstract void cambiarPosicion(Nodo nodo, int nuevoIndex);
-
-    protected abstract int getSize();
-        
+    
     protected abstract T popLast();
-
+    
     public boolean vacia() { return this.getSize() == 0; }
-
+    
     public T consultarMax() { return this.getValor(0); }
-
+    
     public T desapilarMax(){
         this.swap(0,  this.getLastIndx());
         T res = this.popLast();
@@ -25,20 +23,27 @@ public abstract class AbstractHeap<T> {
         return res;
     }
     
-    protected AbstractHeap(Comparator<T> comparador){ this.comparador = comparador; }
-
+    protected AbstractHeap(Comparator<T> comparador){ 
+        this.comparador = comparador; 
+        this.elementos = new ArrayList<Nodo>();
+    }
+    
     protected boolean existe(int nodo) { return nodo < this.getSize() && nodo >= 0; }
-
+    
+    protected Nodo getNodo(int nodo) { return this.elementos.get(nodo); }
+    
     protected T getValor(int index) { return this.getNodo(index).valor; }
-
+    
     protected int getLastIndx() { return this.getSize() - 1; }
-
+    
     protected int getIndxIzq(int i) { return 2 * i + 1; }
     
     protected int getIndxDer(int i) { return 2 * i + 2; }
     
     protected int getIndxPadre(int i) { return (i - 1) / 2; }
-
+    
+    public int getSize() { return this.elementos.size(); }        
+    
     protected int compare(Nodo nodoA, Nodo nodoB){ 
         return this.comparador.compare(nodoA.valor, nodoB.valor);
     }
@@ -55,6 +60,12 @@ public abstract class AbstractHeap<T> {
 
         this.cambiarPosicion(nodoB, indxA);
         this.cambiarPosicion(nodoA, indxB);   
+    }
+
+    protected void swap(Nodo nodoA, Nodo nodoB){
+        int posB = nodoB.posicion;
+        this.cambiarPosicion(nodoB, nodoA.posicion);
+        this.cambiarPosicion(nodoA, posB);   
     }
     
 
