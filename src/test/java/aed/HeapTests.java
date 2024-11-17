@@ -63,7 +63,8 @@ public class HeapTests {
     @Test
     public void array2heap(){
         Integer[] elems = {4,5,9,1,0,3,-5};
-        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder(), elems);
+        Heap<Integer> maxHeap = new Heap<Integer>(Comparator.naturalOrder());
+        maxHeap.inicialiar(elems);
         
         assertFalse(maxHeap.vacia());
         assertEquals(maxHeap.desapilarMax(), 9);

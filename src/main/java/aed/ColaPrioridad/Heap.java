@@ -3,35 +3,46 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Heap<T> extends AbstractHeap<T> {
-    ArrayList<T> elementos;
+    ArrayList<Nodo> elementos;
 
     public Heap(Comparator<T> comparador){
         super(comparador);
-        this.elementos = new ArrayList<T>();
+        this.elementos = new ArrayList<Nodo>();
     }
 
-    public Heap(Comparator<T> comparador, T[] elems){
-        this(comparador); // Creo el Heap vacio
-        for (T e: elems){ this.elementos.add(e);} //Agrego al arrayList O(n)
+    public ArrayList<Nodo> inicialiar(T[] elems){
+        ArrayList<Nodo> res = new ArrayList<Nodo>();
+        for (int i = 0; i < elems.length; i++){ 
+            Nodo nodo = new Nodo(elems[i], i);
+            res.add(nodo);
+            this.elementos.add(nodo);
+        } //Agrego al arrayList O(n)
         this.heapify();
+        return res;
     }
 
-    public void apilar(T elem) {
-        this.elementos.add(elem);
-        this.siftUp(this.elementos.size()-1);
-    }
-
-    public ArrayList<T> sort(){
-        ArrayList<T> ordenado = new ArrayList<T>();
-        while (!this.vacia()){
-            ordenado.add(this.desapilarMax());
-        }
-        this.elementos = ordenado;
-        return ordenado;
-    }
 
     @Override
-    protected T getValor(int nodo) { return this.elementos.get(nodo); }
+    public Nodo apilar(T elem) {
+        Nodo nodo = new Nodo(elem, this.elementos.size());
+        this.elementos.add(nodo);
+        this.siftUp(this.elementos.size()-1);
+        return nodo;
+    }
+
+    // public ArrayList<T> sort(){
+    //     ArrayList<T> ordenado = new ArrayList<T>();
+    //     while (!this.vacia()){
+    //         ordenado.add(this.desapilarMax());
+    //     }
+    //     this.elementos = ordenado;
+    //     return ordenado;
+    // }
+
+    public Nodo getNodo(int indx) {return this.elementos.get(indx); }
+
+    @Override
+    protected T getValor(int nodo) { return this.getNodo(nodo).valor; }
 
     @Override
     protected int getSize() { return this.elementos.size(); }
@@ -40,31 +51,32 @@ public class Heap<T> extends AbstractHeap<T> {
     protected void swap(int indxA, int indxB) {
         if (indxA == indxB) return;
         
-        T nodoA = this.getValor(indxA);
-        T nodoB = this.getValor(indxB);
+        Nodo nodoA = this.getNodo(indxA);
+        Nodo nodoB = this.getNodo(indxB);
 
-        this.elementos.set(indxA, nodoB);
-        this.elementos.set(indxB, nodoA);   
+        this.cambiarPosicion(nodoB, indxA);
+        this.cambiarPosicion(nodoA, indxB);   
     }
     
     @Override
     protected T popLast() { 
-        T res = this.elementos.get(this.getLastIndx());
+        Nodo nodo = this.getNodo(this.getLastIndx());
         this.elementos.remove(this.getLastIndx());
-        return res;
+        nodo.posicion = -1; 
+        return nodo.valor;
     }
-    public void eliminar(T elem) {
-        int index = elementos.indexOf(elem); // Encuentra el índice
-        if (index == -1) return; // Si no existe, no hacer nada
-    
-        // Intercambiar con el último elemento y eliminar
-        swap(index, elementos.size() - 1);
-        elementos.remove(elementos.size() - 1);
-    
-        // Restaurar el heap
-        if (index < elementos.size()) {
-            siftDown(index);
-            siftUp(index);
-        }
+
+    public void cambiarPrioridad(Nodo nodo, T valor){
+        nodo.valor = valor;
+        Nodo padre = this.getNodo(this.getIndxPadre(nodo.posicion));
+        if (this.compare(nodo, padre) > 0) this.siftUp(nodo.posicion);
+        else this.siftDown(nodo.posicion);
+    }
+
+
+    @Override
+    protected void cambiarPosicion(Nodo nodo, int indx){
+        this.elementos.set(indx, nodo);
+        nodo.posicion = indx;
     }
 }

@@ -1,15 +1,17 @@
 package aed.ColaPrioridad;
 import java.util.Comparator;
 
-public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
+public abstract class AbstractHeap<T> {
     Comparator<T> comparador;
 
-    protected abstract T getValor(int nodo);
+    public abstract Nodo apilar(T valor);
+
+    protected abstract Nodo getNodo(int index);
+
+    protected abstract void cambiarPosicion(Nodo nodo, int nuevoIndex);
 
     protected abstract int getSize();
-    
-    protected abstract void swap(int indxA, int indxB);
-    
+        
     protected abstract T popLast();
 
     public boolean vacia() { return this.getSize() == 0; }
@@ -27,6 +29,8 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
 
     protected boolean existe(int nodo) { return nodo < this.getSize() && nodo >= 0; }
 
+    protected T getValor(int index) { return this.getNodo(index).valor; }
+
     protected int getLastIndx() { return this.getSize() - 1; }
 
     protected int getIndxIzq(int i) { return 2 * i + 1; }
@@ -35,8 +39,27 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
     
     protected int getIndxPadre(int i) { return (i - 1) / 2; }
 
+    protected int compare(Nodo nodoA, Nodo nodoB){ 
+        return this.comparador.compare(nodoA.valor, nodoB.valor);
+    }
+
+    protected int compare(int indxNodoA, int indxNodoB){ 
+        return this.comparador.compare(this.getValor(indxNodoA), this.getValor(indxNodoB));
+    }
+
+    protected void swap(int indxA, int indxB) {
+        if (indxA == indxB) return;
+        
+        Nodo nodoA = this.getNodo(indxA);
+        Nodo nodoB = this.getNodo(indxB);
+
+        this.cambiarPosicion(nodoB, indxA);
+        this.cambiarPosicion(nodoA, indxB);   
+    }
+    
+
     protected int siftUp(int i){
-        while (i != 0 && this.comparador.compare(this.getValor(i), this.getValor(this.getIndxPadre(i))) > 0){
+        while (i != 0 && this.compare(i, this.getIndxPadre(i)) > 0){
             this.swap(i, this.getIndxPadre(i));
             i = this.getIndxPadre(i);
         }
@@ -46,7 +69,7 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
     protected int siftDown(int i){
         int indxMayor = this.getIndxMayor(i);
         // Itero mientras tenga un nodo hijo mayor que si mismo
-        while  (this.existe(indxMayor) && this.comparador.compare(this.getValor(i), this.getValor(indxMayor)) < 0) {                
+        while  (this.existe(indxMayor) && this.compare(i, indxMayor) < 0) {                
             this.swap(i, indxMayor);
             i = indxMayor;
             indxMayor = this.getIndxMayor(i);
@@ -72,4 +95,21 @@ public abstract class AbstractHeap<T> implements ColaPrioridad<T> {
             else return indxDer;
         }
     }
+
+    public class Nodo {
+        public T valor;
+        protected int posicion;
+
+        protected Nodo (T valor){ this.valor = valor; }
+
+        protected Nodo (T valor, int pos){
+            this(valor);
+            this.posicion = pos;
+        }
+
+        @Override
+        public String toString() {
+            return this.valor.toString();
+        }
+    } 
 }
