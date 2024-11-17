@@ -53,4 +53,18 @@ public class Heap<T> extends AbstractHeap<T> {
         this.elementos.remove(this.getLastIndx());
         return res;
     }
+    public void eliminar(T elem) {
+        int index = elementos.indexOf(elem); // Encuentra el índice
+        if (index == -1) return; // Si no existe, no hacer nada
+    
+        // Intercambiar con el último elemento y eliminar
+        swap(index, elementos.size() - 1);
+        elementos.remove(elementos.size() - 1);
+    
+        // Restaurar el heap
+        if (index < elementos.size()) {
+            siftDown(index);
+            siftUp(index);
+        }
+    }
 }

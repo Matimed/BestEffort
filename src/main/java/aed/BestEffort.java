@@ -12,6 +12,7 @@ public class BestEffort {
     private ArrayList<Integer> ciudadesMayorPerdida;
     private Integer gananciasTotales;
     private Integer trasladosTotales;
+    private ArrayList<Ciudades> listaCiudades; 
 
     private Comparator<Traslado> comparadorMasRedituable =(t1, t2) ->{
         if (t1.gananciaNeta != t2.gananciaNeta){
@@ -28,40 +29,73 @@ public class BestEffort {
     private HeapEnlazado<Traslado> heapRedituable = new HeapEnlazado<>(comparadorMasRedituable);
     private HeapEnlazado<Traslado> heapAntiguo = new HeapEnlazado<>(comparadorMasAntiguo);
 
-    private Comparator<Ciudades> comparadorSuperavit = (t1, t2) -> {
-        return Integer.compare(t2.superavit, t1.superavit); 
+    private Comparator<Ciudades> comparadorSuperavit = (c1, c2) -> {
+        return Integer.compare(c2.superavit, c1.superavit); 
     };
 
     private Heap<Ciudades> heapCiudades = new Heap<>(comparadorSuperavit); 
 
     private void procesarDespacho(Traslado traslado){
+        actualizarCiudad(traslado.origen, traslado.gananciaNeta, 0);
+        actualizarCiudad(traslado.destino, 0, traslado.gananciaNeta);
 
-        actualizarCiudad(traslado.origen, traslado.gananciaNeta);
-
-        actualizarCiudad(traslado.destino, -traslado.gananciaNeta);
+        gananciasTotales += traslado.gananciaNeta;
+        trasladosTotales++;
+        actualizarListasMayorGananciaYPerdida();
     }
 
-    private void actualizarCiudad(int idCiudad, int gananciaNeta){
-        
+    private void actualizarCiudad(int idCiudad, int ganancia, int perdida){
+        Ciudades ciudad = listaCiudades.get(idCiudad); // Acceder a la ciudad en la lista
+        ciudad.ganancia += ganancia;  // Actualizar ganancia
+        ciudad.perdida += perdida;   // Actualizar pérdida
+        ciudad.superavit = ciudad.ganancia - ciudad.perdida; // Recalcular superávit
+            // Actualizar en el heap
+        heapCiudades.eliminar(ciudad);
+        heapCiudades.apilar(ciudad);
+        actualizarListasMayorGananciaYPerdida();
     }
+
+    private void actualizarListasMayorGananciaYPerdida() {
+        ciudadesMayorGanancia.sort((id1, id2) -> {
+            int ganancia1 = listaCiudades.get(id1).ganancia;
+            int ganancia2 = listaCiudades.get(id2).ganancia;
+            return Integer.compare(ganancia2, ganancia1); // Orden descendente por ganancia
+        });
+    
+        ciudadesMayorPerdida.sort((id1, id2) -> {
+            int perdida1 = listaCiudades.get(id1).perdida;
+            int perdida2 = listaCiudades.get(id2).perdida;
+            return Integer.compare(perdida2, perdida1); // Orden descendente por pérdida
+        });
+    }
+    
 
     public BestEffort(int cantCiudades, Traslado[] traslados){
         //vamos a decir que cantCiudades == C, y traslados == T, ya que esta función establece las ciudades y las estructuras de los traslados del sistema
-        ArrayList<Integer> citys = new ArrayList<Integer>();
-        Integer i = 0;
-        for (i=0; i<cantCiudades; i++) //O(C)
-        {
-            citys.add(i); //O(1)
+        gananciasTotales = 0;
+        trasladosTotales = 0;
+
+        posCiudadesEnHeap = new ArrayList<>(cantCiudades); //O(1)
+        ciudadesMayorGanancia = new ArrayList<>(cantCiudades); //O(1)
+        ciudadesMayorPerdida = new ArrayList<>(cantCiudades); //O(1)
+        listaCiudades = new ArrayList<>(cantCiudades);
+
+        for (int i = 0; i < cantCiudades; i++) {
+            posCiudadesEnHeap.add(i);
+            ciudadesMayorGanancia.add(i);
+            ciudadesMayorPerdida.add(i);
+
+            Ciudades ciudad = new Ciudades();
+            ciudad.idCiudad = i;  // El índice coincide con el ID
+            listaCiudades.add(ciudad);
+            heapCiudades.apilar(ciudad);
         }
-        posCiudadesEnHeap=citys; //O(1)
-        ciudadesMayorGanancia=citys; //O(1)
-        ciudadesMayorPerdida=citys; //O(1)
+        registrarTraslados(traslados); //no se si esto iría acá
     }
 
     public void registrarTraslados(Traslado[] traslados){
 
-        heapRedituable.inicialiar(heapAntiguo);
-        
+        heapRedituable.inicialiar(heapAntiguo); 
         for (int i = 0; i < traslados.length; i++) {
             Traslado traslado = traslados[i];
             heapRedituable.apilar(traslado);
@@ -98,8 +132,7 @@ public class BestEffort {
     }
 
     public int ciudadConMayorSuperavit(){
-        // Implementar
-        return 0; //O(1)
+        return heapCiudades.consultarMax().idCiudad; // O(1)
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia(){

@@ -7,10 +7,10 @@ public class Ciudades {
     int superavit;
 
 
-    public Ciudades(int idCiudad, int ganancia, int perdida, int superavit){
-        this.idCiudad = idCiudad;
-        this.ganancia = ganancia;
-        this.perdida = perdida;
-        this.superavit = superavit;
+    public Ciudades(){
+        this.idCiudad = 0;
+        this.ganancia = 0;
+        this.perdida = 0;
+        this.superavit = 0;
     }
 }
