@@ -8,8 +8,8 @@ import aed.ColaPrioridad.HeapEnlazado;
 
 public class BestEffort {
     private ArrayList<Integer> posCiudadesEnHeap; //no sé si esto es array de integers. necesita un puntero al nodo de cada ciudad, eso sí
-    private ArrayList<Integer> ciudadesMayorGanancia;
-    private ArrayList<Integer> ciudadesMayorPerdida;
+    private ArrayList<Integer> MayoresGanancias;
+    private ArrayList<Integer> MayoresPerdidas;
     private Integer gananciasTotales;
     private Integer trasladosTotales;
     private ArrayList<Ciudades> listaCiudades; 
@@ -56,13 +56,13 @@ public class BestEffort {
     }
 
     private void actualizarListasMayorGananciaYPerdida() {
-        ciudadesMayorGanancia.sort((id1, id2) -> {
+        MayoresGanancias.sort((id1, id2) -> {
             int ganancia1 = listaCiudades.get(id1).ganancia;
             int ganancia2 = listaCiudades.get(id2).ganancia;
             return Integer.compare(ganancia2, ganancia1); // Orden descendente por ganancia
         });
     
-        ciudadesMayorPerdida.sort((id1, id2) -> {
+        MayoresPerdidas.sort((id1, id2) -> {
             int perdida1 = listaCiudades.get(id1).perdida;
             int perdida2 = listaCiudades.get(id2).perdida;
             return Integer.compare(perdida2, perdida1); // Orden descendente por pérdida
@@ -74,16 +74,15 @@ public class BestEffort {
         //vamos a decir que cantCiudades == C, y traslados == T, ya que esta función establece las ciudades y las estructuras de los traslados del sistema
         gananciasTotales = 0;
         trasladosTotales = 0;
-
         posCiudadesEnHeap = new ArrayList<>(cantCiudades); //O(1)
-        ciudadesMayorGanancia = new ArrayList<>(cantCiudades); //O(1)
-        ciudadesMayorPerdida = new ArrayList<>(cantCiudades); //O(1)
+        MayoresGanancias = new ArrayList<>(cantCiudades); //O(1)
+        MayoresPerdidas = new ArrayList<>(cantCiudades); //O(1)
         listaCiudades = new ArrayList<>(cantCiudades);
 
         for (int i = 0; i < cantCiudades; i++) {
             posCiudadesEnHeap.add(i);
-            ciudadesMayorGanancia.add(i);
-            ciudadesMayorPerdida.add(i);
+            MayoresGanancias.add(i);
+            MayoresPerdidas.add(i);
 
             Ciudades ciudad = new Ciudades();
             ciudad.idCiudad = i;  // El índice coincide con el ID
@@ -136,11 +135,11 @@ public class BestEffort {
     }
 
     public ArrayList<Integer> ciudadesConMayorGanancia(){
-        return ciudadesMayorGanancia; //dado que esta instrucción solo devuelve un arraylist, es O(1)
+        return MayoresGanancias; //dado que esta instrucción solo devuelve un arraylist, es O(1)
     }
 
     public ArrayList<Integer> ciudadesConMayorPerdida(){
-        return ciudadesMayorPerdida; //dado que esta instrucción solo devuelve un arraylist, es O(1)
+        return MayoresPerdidas; //dado que esta instrucción solo devuelve un arraylist, es O(1)
     }
 
     public int gananciaPromedioPorTraslado(){
