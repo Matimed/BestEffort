@@ -3,21 +3,23 @@ package aed;
 import java.util.Comparator;
 
 public class Ciudad {
-    
-    int idCiudad;
+    int id;
     int ganancia;
     int perdida;
-    int superavit;
 
-
-    public Ciudad(){
-        this.idCiudad = 0;
+    public Ciudad(int id){
+        this.id = id;
         this.ganancia = 0;
         this.perdida = 0;
-        this.superavit = 0;
     }
 
-    public static final Comparator<Ciudad> porSuperavit() { return (c1, c2) -> 
-        { return Integer.compare(c1.superavit, c2.superavit);};
+    public int superavit() { return this.ganancia - this.perdida;}
+
+    public static final Comparator<Ciudad> porSuperavit() { 
+        return (c1, c2) -> {
+            if (c1.superavit() != c2.superavit()){ return Integer.compare (c1.superavit(), c2.superavit()); }
+            else{ return Integer.compare(c2.id, c1.id); }
+        };
     }
+
 }

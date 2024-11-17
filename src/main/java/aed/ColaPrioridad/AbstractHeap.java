@@ -117,10 +117,5 @@ public abstract class AbstractHeap<T> {
             this(valor);
             this.posicion = pos;
         }
-
-        @Override
-        public String toString() {
-            return this.valor.toString();
-        }
     } 
 }

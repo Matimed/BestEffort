@@ -20,8 +20,8 @@ public class Traslado {
 
     public static final Comparator<Traslado> porGanancia() {
         return (t1, t2) -> { 
-            if (t1.gananciaNeta != t2.gananciaNeta){ return Integer.compare (t2.gananciaNeta,t1.gananciaNeta); }
-            else{ return Integer.compare(t1.id,t2.id); }
+            if (t1.gananciaNeta != t2.gananciaNeta){ return Integer.compare (t1.gananciaNeta,t2.gananciaNeta); }
+            else{ return Integer.compare(t2.id,t1.id); }
         };
     }
 

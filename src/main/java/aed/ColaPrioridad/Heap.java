@@ -47,12 +47,11 @@ public class Heap<T> extends AbstractHeap<T> {
         return nodo.valor;
     }
 
-    public void cambiarPrioridad(Nodo nodo, T valor){
-        nodo.valor = valor;
+    public void actualizarPrioridad(Nodo nodo){
         Nodo padre = this.getNodo(this.getIndxPadre(nodo.posicion));
         if (this.compare(nodo, padre) > 0) this.siftUp(nodo.posicion);
         else this.siftDown(nodo.posicion);
-    }
+    }   
 
     @Override
     protected void cambiarPosicion(Nodo nodo, int indx){

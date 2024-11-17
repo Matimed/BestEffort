@@ -8,11 +8,6 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
         super(comparador);
     }
 
-    @Override
-    public String toString() {
-        return this.elementos.toString();
-    }
-
     /**
      * Enlaza el Heap con otro del mismo tipo.
      * 
