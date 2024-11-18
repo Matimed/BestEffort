@@ -15,104 +15,139 @@ public class BestEffort {
     private int gananciasTotales;
     private int despachosTotales;
 
-    /**O(|C|+|T|)
-     * Notar que, en esta función, CantCiudades = C, y traslados = T 
-    */
+    /** 
+     * Constructor de la clase BestEffort.
+     * Inicializa las ciudades, los traslados y otras variables necesarias para el funcionamiento del sistema.
+     * 
+     * Complejidad: O(|C| + |T|)
+     * Notar que |C| representa la cantidad de ciudades y |T| representa la cantidad de traslados.
+     */
     public BestEffort(int cantCiudades, Traslado[] traslados){       
-        //O(1)
+        // O(1): Inicialización de variables
         this.gananciasTotales = 0;
         this.despachosTotales = 0;
         this.cMayorGanancia = new ArrayList<Integer>();
         this.cMayorPerdida = new ArrayList<Integer>();
         Ciudad[] ciudades = new Ciudad[cantCiudades];
         
-        //O(|C|)
+        // O(|C|): Creación de las ciudades
         for (int i = 0; i < cantCiudades; i++) {
-            //O(1)
             Ciudad ciudad = new Ciudad(i);
             this.cMayorGanancia.add(i);
             this.cMayorPerdida.add(i);
             ciudades[i] = ciudad;
         }
 
-        //O(|C|)
+        // O(|C|): Inicialización del conjunto de ciudades
         this.ciudades = cSuperavit.inicialiar(ciudades);
         
-        //O(|T|)
+        // O(|T|): Inicialización de los traslados con antigüedad y enlace con ganancias
         this.tAntiguedad.inicialiar(this.tGanancias, traslados);
     }
 
-    /*O(|traslados|*log|T|)
-    */
+    /**
+     * Registra los traslados en la estructura correspondiente.
+     * 
+     * Complejidad: O(|T| * log |T|)
+     * Donde |T| es la cantidad de traslados.
+     */
     public void registrarTraslados(Traslado[] traslados){
-        //O(|traslados|)
-        for (Traslado t : traslados) 
-        { 
-            //O(log|T|)
-            tAntiguedad.apilar(t); 
-        }
+        // O(|T|): Itera sobre todos los traslados
+        for (Traslado t : traslados) { tAntiguedad.apilar(t); } // O(log |T|): Inserción de cada traslado en el heap de antigüedad
     }
 
-    /*O(n*(log|C|+log|T|))
-    */
+    /**
+     * Despacha los n traslados más redituables.
+     * 
+     * Complejidad: O(n * (log |C| + log |T|))
+     * Donde |C| es la cantidad de ciudades y |T| es la cantidad de traslados.
+     */
     public int[] despacharMasRedituables(int n){ return despacharDesde(n, this.tGanancias); }
 
-    /*O(n*(log|C|+log|T|))
-    */
+    /**
+     * Despacha los n traslados más antiguos.
+     * 
+     * Complejidad: O(n * (log |C| + log |T|))
+     * Donde |C| es la cantidad de ciudades y |T| es la cantidad de traslados.
+     */
     public int[] despacharMasAntiguos(int n){ return this.despacharDesde(n, this.tAntiguedad); }
     
-    /*O(1)
-    */
+    /**
+     * Obtiene la ciudad con mayor superávit.
+     * 
+     * Complejidad: O(1)
+     */
     public int ciudadConMayorSuperavit() { return cSuperavit.consultarMax().id; }
 
-    /*O(1)
-    */
+    /**
+     * Obtiene las ciudades con mayor ganancia.
+     * 
+     * Complejidad: O(1)
+     */
     public ArrayList<Integer> ciudadesConMayorGanancia() { return this.cMayorGanancia;} 
 
-    /*O(1)
-    */
+    /**
+     * Obtiene las ciudades con mayor pérdida.
+     * 
+     * Complejidad: O(1)
+     */
     public ArrayList<Integer> ciudadesConMayorPerdida() {return this.cMayorPerdida;}
     
-    /*O(1)
-    */
+    /**
+     * Calcula la ganancia promedio por traslado.
+     * 
+     * Complejidad: O(1)
+     */
     public int gananciaPromedioPorTraslado(){
         if (despachosTotales==0) {return 0; }
-        return (int) Math.floor(gananciasTotales/despachosTotales); }   
+        return (int) Math.floor(gananciasTotales/despachosTotales); 
+    }  
     
-    /*O(n*(log|C|+log|T|))
-    */ 
+    /**
+     * Despacha los traslados desde un heap dado, procesando los traslados de acuerdo a su orden.
+     * 
+     * Complejidad: O(n * (log |C| + log |T|))
+     * Donde |C| es la cantidad de ciudades y |T| es la cantidad de traslados.
+     */
     private int[] despacharDesde(int n, HeapEnlazado<Traslado> heap){
-        //O(1)
         int [] despachados = new int[n];
         int index = 0;
         
-        //O(n)
+        // O(n): Iteración sobre los traslados a despachar
         while(n > 0 && !heap.vacio()){
-            //O(log|T|)
+            // O(log |T|): Desapilado de un traslado del heap
             Traslado traslado = heap.desapilarMax();
             despachados[index ++] = traslado.id;
 
-            //O(log|C|)
+            // O(log |C|): Procesamiento de los despachos de las ciudades
             procesarDespacho(traslado);
             n--;
         }
         return despachados;
     }
  
-    /*O(log|C|+log|T|)
-    */
+    /**
+     * Procesa el despacho de un traslado, actualizando las ciudades involucradas y las ganancias totales.
+     * 
+     * Complejidad: O(log |C|)
+     * Donde |C| es la cantidad de ciudades
+     */
     private void procesarDespacho(Traslado traslado){
+        // O(1): Obtención de la ciudad con mayor ganancia y mayor pérdida
         int mayorGanancia = this.getCiudad(this.cMayorGanancia.get(0)).ganancia;
         int mayorPerdida = this.getCiudad(this.cMayorPerdida.get(0)).perdida;
 
+        // O(log |C|): Procesamiento de la ciudad origen
         Ciudad origen = this.getCiudad(traslado.origen);
         origen.ganancia += traslado.gananciaNeta;
         cSuperavit.actualizarPrioridad(this.ciudades.get(origen.id));
 
+        // O(log |C|): Procesamiento de la ciudad destino
         Ciudad destino = this.getCiudad(traslado.destino);
         destino.perdida += traslado.gananciaNeta;
         cSuperavit.actualizarPrioridad(this.ciudades.get(destino.id));
 
+        // O(1): Actualización de las ciudades con mayor ganancia y perdida
         this.gananciasTotales += traslado.gananciaNeta;
         this.despachosTotales ++;
 
@@ -127,7 +162,10 @@ public class BestEffort {
         } else if (destino.perdida == mayorPerdida){ this.cMayorPerdida.add(destino.id);}
     }
     
-    /*O(1) 
-    */
+    /**
+     * Obtiene la ciudad correspondiente a un id.
+     * 
+     * Complejidad: O(1)
+     */
     private Ciudad getCiudad(int id){  return this.ciudades.get(id).valor; }
 }
