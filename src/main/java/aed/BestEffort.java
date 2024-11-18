@@ -87,7 +87,7 @@ public class BestEffort {
         int index = 0;
         
         //O(n)
-        while(n > 0 && !heap.vacia()){
+        while(n > 0 && !heap.vacio()){
             //O(log|T|)
             Traslado traslado = heap.desapilarMax();
             despachados[index ++] = traslado.id;

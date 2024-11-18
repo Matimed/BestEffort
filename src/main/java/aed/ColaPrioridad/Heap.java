@@ -6,6 +6,17 @@ public class Heap<T> extends AbstractHeap<T> {
 
     public Heap(Comparator<T> comparador){ super(comparador); }
 
+    /**
+     * Inicializa el heap con los elementos proporcionados y los organiza
+     * para mantener la propiedad del heap.
+     *
+     * @param elems un array de elementos de tipo T que se agregarán al heap.
+     * @return una lista de nodos que representan los elementos inicializados 
+     * en el orden en el que fueron dados.
+     *
+     * Complejidad: O(n), ya que agregar los elementos al ArrayList es O(n), y
+     * la operación de `heapify` también tiene una complejidad de O(n).
+     */
     public ArrayList<Nodo> inicialiar(T[] elems){
         ArrayList<Nodo> res = new ArrayList<Nodo>();
         for (int i = 0; i < elems.length; i++){ 
@@ -17,7 +28,11 @@ public class Heap<T> extends AbstractHeap<T> {
         return res;
     }
 
-
+    /**
+     * {@inheritDoc}
+     *
+     * Complejidad: O(log n), ya que se realiza una operación de `siftUp` al final.
+    */
     @Override
     public Nodo apilar(T elem) {
         Nodo nodo = new Nodo(elem, this.elementos.size());
@@ -25,20 +40,12 @@ public class Heap<T> extends AbstractHeap<T> {
         this.siftUp(this.elementos.size()-1);
         return nodo;
     }
-
-    public Nodo getNodo(int indx) {return this.elementos.get(indx); }
-
-    @Override
-    protected void swap(int indxA, int indxB) {
-        if (indxA == indxB) return;
-        
-        Nodo nodoA = this.getNodo(indxA);
-        Nodo nodoB = this.getNodo(indxB);
-
-        this.cambiarPosicion(nodoB, indxA);
-        this.cambiarPosicion(nodoA, indxB);   
-    }
     
+    /**
+     * {@inheritDoc}
+     *
+     * Complejidad: O(1), ya que elimina directamente el último elemento de la lista.
+     */
     @Override
     protected T popLast() { 
         Nodo nodo = this.getNodo(this.getLastIndx());
@@ -47,12 +54,12 @@ public class Heap<T> extends AbstractHeap<T> {
         return nodo.valor;
     }
 
-    public void actualizarPrioridad(Nodo nodo){
-        Nodo padre = this.getNodo(this.getIndxPadre(nodo.posicion));
-        if (this.compare(nodo, padre) > 0) this.siftUp(nodo.posicion);
-        else this.siftDown(nodo.posicion);
-    }   
 
+    /**
+     * {@inheritDoc}
+     *
+     * Complejidad: O(1), porque simplemente ajusta un elemento en la lista y actualiza su posición.
+     */
     @Override
     protected void cambiarPosicion(Nodo nodo, int indx){
         this.elementos.set(indx, nodo);
