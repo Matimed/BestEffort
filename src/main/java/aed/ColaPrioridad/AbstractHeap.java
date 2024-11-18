@@ -3,7 +3,24 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public abstract class AbstractHeap<T> {
+    /** 
+     * Comparator utilizado para definir el orden de los elementos dentro del heap.
+     * Este comparador se encarga de establecer la relación de orden entre dos elementos del tipo genérico T,
+     * ya sea para ordenar de forma ascendente, descendente, o según algún otro criterio personalizado.
+     * 
+     * El Comparator permite que la clase AbstractHeap<T> no esté limitada a un tipo específico de elementos 
+     * o a un único criterio de ordenamiento, sino que sea reutilizable para cualquier tipo de objeto T 
+     * que desee ordenarse según un criterio determinado por el usuario.
+    */ 
     Comparator<T> comparador;
+
+    /** 
+     * Lista que almacena los nodos del heap.
+     * Los elementos del heap se almacenan internamente en una lista de tipo `ArrayList<Nodo>`, donde cada `Nodo`
+     * contiene un valor de tipo T. 
+     * 
+     * El heap mantiene la propiedad de su estructura (como el heap mínimo o máximo) utilizando esta lista.
+     */
     ArrayList<Nodo> elementos;
 
 
@@ -192,9 +209,16 @@ public abstract class AbstractHeap<T> {
     }
 
     public class Nodo {
+        /** 
+         * El valor almacenado en el nodo, que es del tipo genérico T.
+         */
         public T valor;
-        protected int posicion;
 
+        /** 
+         * La posición del nodo dentro de la estructura del heap.
+         */
+        protected int posicion;
+        
         protected Nodo (T valor){ this.valor = valor; }
 
         protected Nodo (T valor, int pos){

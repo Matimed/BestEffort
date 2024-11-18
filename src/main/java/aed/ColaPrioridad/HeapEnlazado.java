@@ -2,7 +2,12 @@ package aed.ColaPrioridad;
 import java.util.Comparator;
 
 public class HeapEnlazado<T> extends AbstractHeap<T>{
-    HeapEnlazado<T> espejo; // Almacena la referencia al heap espejado
+    /** 
+     * Almacena la referencia al heap espejado.
+     * Este heap se usa como una del heap original con otro ordenamiento,
+     * facilitando operaciones que requieren dos heaps mantieniendo amnos sincronizados.
+     */
+    HeapEnlazado<T> espejo;
 
     public HeapEnlazado(Comparator<T> comparador){
         super(comparador);
@@ -157,12 +162,22 @@ public class HeapEnlazado<T> extends AbstractHeap<T>{
     }
 
     protected class NodoEnlazado extends Nodo {
-        protected int posicionReflejo; // Almacena la posicion del elemento en el espejo
+        /** 
+         * La posición del nodo en el espejo (reflejo) del heap.
+         */
+        protected int posicionReflejo;
         
         protected NodoEnlazado (T valor){ super(valor); }
 
         protected NodoEnlazado (T valor, int posicion){ super(valor, posicion); }
 
+        /** 
+         * Constructor de NodoEnlazado con valor, posición y posición en el espejo.
+         * 
+         * @param valor El valor que se almacenará en el nodo.
+         * @param posicion La posición del nodo en el heap.
+         * @param posicionReflejo La posición del nodo en el espejo.
+         */
         protected NodoEnlazado (T valor, int posicion, int posicionReflejo){
             super(valor, posicion);
             this.posicionReflejo = posicionReflejo;

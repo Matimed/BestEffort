@@ -49,11 +49,11 @@ public class BestEffort {
      * Registra los traslados en la estructura correspondiente.
      * 
      * Complejidad: O(|traslados| * log |T|)
-     * Donde |traslados| son los traslados a agregar
-     * y |T| son los traslados que ya están almacenados en el sistema
+     * Donde |traslados| son los traslados a agregar y 
+     * |T| son los traslados que ya están almacenados en el sistema
      */
     public void registrarTraslados(Traslado[] traslados){
-        // O(|T|): Itera sobre todos los traslados a ingresar
+        // O(|traslados|): Itera sobre todos los traslados a ingresar
         for (Traslado t : traslados) { tAntiguedad.apilar(t); } // O(log |T|): Inserción de cada nuevo traslado en el heap de antigüedad
     }
 
